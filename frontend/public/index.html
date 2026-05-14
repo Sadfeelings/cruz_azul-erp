@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Farmacia Cruz Azul</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
+        h1, h2 { color: #004b87; text-align: center; }
+        .container { max-width: 800px; margin: 0 auto 20px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        form { display: flex; flex-direction: column; gap: 10px; }
+        label { font-weight: bold; color: #333; }
+        input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        button { margin-top: 10px; padding: 10px; background-color: #004b87; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #003366; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #004b87; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Farmacia Cruz Azul - ERP Dockerizado</h1>
+        <h2>Ingresar Nuevo Producto</h2>
+        <!-- Formulario para enviar datos (POST) -->
+        <form id="productForm">
+            <label for="producto">Nombre del Producto:</label>
+            <input type="text" id="producto" placeholder="Ej: Paracetamol 500mg" required>
+
+            <label for="descripcion">Descripción:</label>
+            <input type="text" id="descripcion" placeholder="Ej: Caja de 20 comprimidos" required>
+
+            <label for="cantidad">Cantidad en Stock:</label>
+            <input type="number" id="cantidad" placeholder="Ej: 50" required>
+
+            <label for="precio_unitario">Precio Unitario (CLP):</label>
+            <input type="number" id="precio_unitario" placeholder="Ej: 1500" required>
+
+            <button type="submit">Guardar Producto</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <h2>Listado de Productos en Inventario</h2>
+        <!-- Tabla para consultar datos (GET) -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                </tr>
+            </thead>
+            <tbody id="productTableBody">
+                <!-- Aquí se inyectarán los productos automáticamente desde PostgreSQL -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Al cargar la página, se ejecuta la función para buscar los productos
+        document.addEventListener('DOMContentLoaded', obtenerProductos);
+
+        // Lógica para enviar un nuevo producto (POST)
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Evita que la página se recargue
+
+            // Capturamos los datos del formulario
+            const nuevoProducto = {
+                producto: document.getElementById('producto').value,
+                descripcion: document.getElementById('descripcion').value,
+                cantidad: parseInt(document.getElementById('cantidad').value),
+                precio_unitario: parseInt(document.getElementById('precio_unitario').value)
+            };
+
+            try {
+                // Hacemos la petición a la API interna de Node.js
+                const response = await fetch('/api/productos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(nuevoProducto)
+                });
+
+                if (response.ok) {
+                    alert('¡Producto guardado exitosamente en PostgreSQL!');
+                    document.getElementById('productForm').reset(); // Limpiar formulario
+                    obtenerProductos(); // Actualizar la tabla
+                } else {
+                    alert('Error al guardar el producto.');
+                }
+            } catch (error) {
+                console.error('Error de red:', error);
+            }
+        });
+
+        // Lógica para consultar los productos (GET)
+        async function obtenerProductos() {
+            try {
+                const response = await fetch('/api/productos');
+                const productos = await response.json();
+                
+                const tbody = document.getElementById('productTableBody');
+                tbody.innerHTML = ''; // Limpiar la tabla antes de llenarla
+                
+                // Recorremos los productos y creamos las filas de la tabla
+                productos.forEach(prod => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${prod.id}</td>
+                        <td><strong>${prod.producto}</strong></td>
+                        <td>${prod.descripcion}</td>
+                        <td>${prod.cantidad}</td>
+                        <td>$${prod.precio_unitario}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Error al obtener productos:', error);
+            }
+        }
+    </script>
+
+</body>
+</html>
