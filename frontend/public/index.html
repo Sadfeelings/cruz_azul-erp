@@ -4,72 +4,193 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ERP Farmacia Cruz Azul</title>
+    <!-- Importamos una fuente moderna de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
-        h1, h2 { color: #004b87; text-align: center; }
-        .container { max-width: 800px; margin: 0 auto 20px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        form { display: flex; flex-direction: column; gap: 10px; }
-        label { font-weight: bold; color: #333; }
-        input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
-        button { margin-top: 10px; padding: 10px; background-color: #004b87; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; }
-        button:hover { background-color: #003366; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-        th { background-color: #004b87; color: white; }
-        tr:nth-child(even) { background-color: #f2f2f2; }
+        :root {
+            --primary-color: #0056b3; /* Azul corporativo */
+            --secondary-color: #00a8e8; /* Celeste claro */
+            --bg-color: #f0f4f8;
+            --text-color: #333;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 32px;
+            letter-spacing: 1px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto 30px auto;
+            background: var(--card-bg);
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 3px solid #e8f4f8;
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+        }
+        input {
+            padding: 12px 15px;
+            border: 1px solid #d1d9e6;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background-color: #f9fbfc;
+        }
+        input:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(0, 168, 232, 0.15);
+            outline: none;
+            background-color: white;
+        }
+        button {
+            margin-top: 10px;
+            padding: 14px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #004494;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 86, 179, 0.2);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #f0f4f8;
+        }
+        th {
+            background-color: #e8f4f8;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        tr:hover {
+            background-color: #f8fbfe;
+        }
+        .badge {
+            background: #e8f4f8;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 13px;
+        }
+        .price {
+            font-weight: 600;
+            color: #27ae60;
+        }
     </style>
 </head>
 <body>
 
+    <header>
+        <h1>💊 ERP Farmacia Cruz Azul</h1>
+    </header>
+
     <div class="container">
-        <h1>Farmacia Cruz Azul - ERP Dockerizado</h1>
         <h2>Ingresar Nuevo Producto</h2>
-        <!-- Formulario para enviar datos (POST) -->
         <form id="productForm">
-            <label for="producto">Nombre del Producto:</label>
-            <input type="text" id="producto" placeholder="Ej: Paracetamol 500mg" required>
-
-            <label for="descripcion">Descripción:</label>
-            <input type="text" id="descripcion" placeholder="Ej: Caja de 20 comprimidos" required>
-
-            <label for="cantidad">Cantidad en Stock:</label>
-            <input type="number" id="cantidad" placeholder="Ej: 50" required>
-
-            <label for="precio_unitario">Precio Unitario (CLP):</label>
-            <input type="number" id="precio_unitario" placeholder="Ej: 1500" required>
-
+            <div class="form-group">
+                <label for="producto">Nombre del Producto:</label>
+                <input type="text" id="producto" placeholder="Ej: Paracetamol 500mg" required>
+            </div>
+            <div class="form-group">
+                <label for="descripcion">Descripción:</label>
+                <input type="text" id="descripcion" placeholder="Ej: Caja de 20 comprimidos" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cantidad">Cantidad en Stock:</label>
+                    <input type="number" id="cantidad" placeholder="Ej: 50" required>
+                </div>
+                <div class="form-group">
+                    <label for="precio_unitario">Precio Unitario (CLP):</label>
+                    <input type="number" id="precio_unitario" placeholder="Ej: 1500" required>
+                </div>
+            </div>
             <button type="submit">Guardar Producto</button>
         </form>
     </div>
 
     <div class="container">
-        <h2>Listado de Productos en Inventario</h2>
-        <!-- Tabla para consultar datos (GET) -->
+        <h2>Inventario Actual</h2>
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Producto</th>
                     <th>Descripción</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unitario</th>
+                    <th>Stock</th>
+                    <th>Precio</th>
                 </tr>
             </thead>
             <tbody id="productTableBody">
-                <!-- Aquí se inyectarán los productos automáticamente desde PostgreSQL -->
+                <!-- Aquí se inyectarán los productos automáticamente -->
             </tbody>
         </table>
     </div>
 
     <script>
-        // Al cargar la página, se ejecuta la función para buscar los productos
         document.addEventListener('DOMContentLoaded', obtenerProductos);
 
-        // Lógica para enviar un nuevo producto (POST)
         document.getElementById('productForm').addEventListener('submit', async (e) => {
-            e.preventDefault(); // Evita que la página se recargue
+            e.preventDefault();
 
-            // Capturamos los datos del formulario
             const nuevoProducto = {
                 producto: document.getElementById('producto').value,
                 descripcion: document.getElementById('descripcion').value,
@@ -78,7 +199,6 @@
             };
 
             try {
-                // Hacemos la petición a la API interna de Node.js
                 const response = await fetch('/api/productos', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -86,35 +206,33 @@
                 });
 
                 if (response.ok) {
-                    alert('¡Producto guardado exitosamente en PostgreSQL!');
-                    document.getElementById('productForm').reset(); // Limpiar formulario
-                    obtenerProductos(); // Actualizar la tabla
+                    alert('✅ ¡Producto guardado exitosamente!');
+                    document.getElementById('productForm').reset();
+                    obtenerProductos(); 
                 } else {
-                    alert('Error al guardar el producto.');
+                    alert('❌ Error al guardar el producto.');
                 }
             } catch (error) {
                 console.error('Error de red:', error);
             }
         });
 
-        // Lógica para consultar los productos (GET)
         async function obtenerProductos() {
             try {
                 const response = await fetch('/api/productos');
                 const productos = await response.json();
                 
                 const tbody = document.getElementById('productTableBody');
-                tbody.innerHTML = ''; // Limpiar la tabla antes de llenarla
+                tbody.innerHTML = ''; 
                 
-                // Recorremos los productos y creamos las filas de la tabla
                 productos.forEach(prod => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${prod.id}</td>
+                        <td><strong>#${prod.id}</strong></td>
                         <td><strong>${prod.producto}</strong></td>
                         <td>${prod.descripcion}</td>
-                        <td>${prod.cantidad}</td>
-                        <td>$${prod.precio_unitario}</td>
+                        <td><span class="badge">${prod.cantidad} un.</span></td>
+                        <td class="price">$${prod.precio_unitario}</td>
                     `;
                     tbody.appendChild(tr);
                 });

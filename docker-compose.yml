@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  db:
+    build: ./database
+    container_name: bd-server
+    environment:
+      POSTGRES_USER: admin_erp
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: farmaciacruzazul
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - azul-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin_erp"]
+      interval: 10s
+      retries: 5
+
+  frontend:
+    build: ./frontend
+    container_name: frontend-erp
+    ports:
+      - "80:80"
+    networks:
+      - azul-net
+    depends_on:
+      db:
+        condition: service_healthy
+
+networks:
+  azul-net:
+    driver: bridge
+
+volumes:
+  db_data:
