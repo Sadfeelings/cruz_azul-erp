@@ -1,7 +1,4 @@
-CREATE DATABASE farmaciacruzazul;
-\c farmaciacruzazul;
-
-CREATE TABLE productos (
+CREATE TABLE IF NOT EXISTS productos (
     id SERIAL PRIMARY KEY,
     producto VARCHAR(255) NOT NULL,
     descripcion TEXT NOT NULL,
